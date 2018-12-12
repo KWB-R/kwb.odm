@@ -1,0 +1,422 @@
+-- SQL Script to Create ODM Blank Schema within a MySQL Database Called "ODM"
+-- Created by Jeff Horsburgh
+-- Created on: 3-3-2011
+
+-- Ensure that tables with existing primay key values of zero are created successfully
+SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
+
+--
+-- Table structure for table `GeneralCategoryCV`
+--
+
+CREATE TABLE GeneralCategoryCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `SampleMediumCV`
+--
+
+CREATE TABLE SampleMediumCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `CensorCodeCV`
+--
+
+CREATE TABLE CensorCodeCV (
+  Term VARCHAR(50) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term`(50) ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `TopicCategoryCV`
+--
+
+CREATE TABLE TopicCategoryCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `SpeciationCV`
+--
+
+CREATE TABLE SpeciationCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `GroupDescriptions`
+--
+
+CREATE TABLE GroupDescriptions (
+  GroupID INT NOT NULL  AUTO_INCREMENT,
+  GroupDescription TEXT NULL,
+  PRIMARY KEY (`GroupID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `LabMethods`
+--
+
+CREATE TABLE LabMethods (
+  LabMethodID INT NOT NULL  AUTO_INCREMENT,
+  LabName VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  LabOrganization VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  LabMethodName VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  LabMethodDescription TEXT NOT NULL,
+  LabMethodLink TEXT NULL,
+  PRIMARY KEY (`LabMethodID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Methods`
+--
+
+CREATE TABLE Methods (
+  MethodID INT NOT NULL  AUTO_INCREMENT,
+  MethodDescription TEXT NOT NULL,
+  MethodLink TEXT NULL,
+  PRIMARY KEY (`MethodID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Units`
+--
+
+CREATE TABLE Units (
+  UnitsID INT NOT NULL  AUTO_INCREMENT,
+  UnitsName VARCHAR(255) NOT NULL,
+  UnitsType VARCHAR(255) NOT NULL,
+  UnitsAbbreviation VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`UnitsID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Qualifiers`
+--
+
+CREATE TABLE Qualifiers (
+  QualifierID INT NOT NULL  AUTO_INCREMENT,
+  QualifierCode VARCHAR(50) NULL DEFAULT NULL,
+  QualifierDescription TEXT NOT NULL,
+  PRIMARY KEY (`QualifierID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `QualityControlLevels`
+--
+
+CREATE TABLE QualityControlLevels (
+  QualityControlLevelID INT NOT NULL  AUTO_INCREMENT,
+  QualityControlLevelCode VARCHAR(50) NOT NULL,
+  Definition VARCHAR(255) NOT NULL,
+  Explanation TEXT NOT NULL,
+  PRIMARY KEY (`QualityControlLevelID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `ODMVersion`
+--
+
+CREATE TABLE ODMVersion (
+  VersionNumber VARCHAR(50) NOT NULL
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `SampleTypeCV`
+--
+
+CREATE TABLE SampleTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Samples`
+--
+
+CREATE TABLE Samples (
+  SampleID INT NOT NULL  AUTO_INCREMENT,
+  SampleType VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  LabSampleCode VARCHAR(50) NOT NULL,
+  LabMethodID INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SampleID` ASC),
+  CONSTRAINT `FK_Samples_LabMethods` FOREIGN KEY (`LabMethodID`) REFERENCES `LabMethods` (`LabMethodID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Samples_SampleTypeCV` FOREIGN KEY (`SampleType`) REFERENCES `SampleTypeCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `SpatialReferences`
+--
+
+CREATE TABLE SpatialReferences (
+  SpatialReferenceID INT NOT NULL  AUTO_INCREMENT,
+  SRSID INT NULL DEFAULT NULL,
+  SRSName VARCHAR(255) NOT NULL,
+  IsGeographic BOOL NULL DEFAULT NULL,
+  Notes TEXT NULL,
+  PRIMARY KEY (`SpatialReferenceID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `ValueTypeCV`
+--
+
+CREATE TABLE ValueTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `ISOMetadata`
+--
+
+CREATE TABLE ISOMetadata (
+  MetadataID INT NOT NULL  AUTO_INCREMENT,
+  TopicCategory VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Title VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Abstract TEXT NOT NULL,
+  ProfileVersion VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  MetadataLink TEXT NULL,
+  PRIMARY KEY (`MetadataID` ASC),
+  CONSTRAINT `FK_ISOMetadata_TopicCategoryCV` FOREIGN KEY (`TopicCategory`) REFERENCES `TopicCategoryCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `VerticalDatumCV`
+--
+
+CREATE TABLE VerticalDatumCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `SeriesCatalog`
+--
+
+CREATE TABLE SeriesCatalog (
+  SeriesID INT NOT NULL  AUTO_INCREMENT,
+  SiteID INT NULL DEFAULT NULL,
+  SiteCode VARCHAR(50) NULL DEFAULT NULL,
+  SiteName VARCHAR(255) NULL DEFAULT NULL,
+  VariableID INT NULL DEFAULT NULL,
+  VariableCode VARCHAR(50) NULL DEFAULT NULL,
+  VariableName VARCHAR(255) NULL DEFAULT NULL,
+  Speciation VARCHAR(255) NULL DEFAULT NULL,
+  VariableUnitsID INT NULL DEFAULT NULL,
+  VariableUnitsName VARCHAR(255) NULL DEFAULT NULL,
+  SampleMedium VARCHAR(255) NULL DEFAULT NULL,
+  ValueType VARCHAR(255) NULL DEFAULT NULL,
+  TimeSupport DOUBLE NULL DEFAULT NULL,
+  TimeUnitsID INT NULL DEFAULT NULL,
+  TimeUnitsName VARCHAR(255) NULL DEFAULT NULL,
+  DataType VARCHAR(255) NULL DEFAULT NULL,
+  GeneralCategory VARCHAR(255) NULL DEFAULT NULL,
+  MethodID INT NULL DEFAULT NULL,
+  MethodDescription TEXT NULL,
+  SourceID INT NULL DEFAULT NULL,
+  Organization VARCHAR(255) NULL DEFAULT NULL,
+  SourceDescription TEXT NULL,
+  Citation TEXT NULL,
+  QualityControlLevelID INT NULL DEFAULT NULL,
+  QualityControlLevelCode VARCHAR(50) NULL DEFAULT NULL,
+  BeginDateTime DATETIME NULL DEFAULT NULL,
+  EndDateTime DATETIME NULL DEFAULT NULL,
+  BeginDateTimeUTC DATETIME NULL DEFAULT NULL,
+  EndDateTimeUTC DATETIME NULL DEFAULT NULL,
+  ValueCount INT NULL DEFAULT NULL,
+  PRIMARY KEY (`SeriesID` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Sources`
+--
+
+CREATE TABLE Sources (
+  SourceID INT NOT NULL  AUTO_INCREMENT,
+  Organization VARCHAR(255) NOT NULL,
+  SourceDescription TEXT NOT NULL,
+  SourceLink TEXT NULL,
+  ContactName VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Phone VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Email VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Address VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  City VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  State VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  ZipCode VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  Citation TEXT NOT NULL,
+  MetadataID INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`SourceID` ASC),
+  CONSTRAINT `FK_Sources_ISOMetaData` FOREIGN KEY (`MetadataID`) REFERENCES `ISOMetadata` (`MetadataID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `OffsetTypes`
+--
+
+CREATE TABLE OffsetTypes (
+  OffsetTypeID INT NOT NULL  AUTO_INCREMENT,
+  OffsetUnitsID INT NOT NULL,
+  OffsetDescription TEXT NOT NULL,
+  PRIMARY KEY (`OffsetTypeID` ASC),
+  CONSTRAINT `FK_OffsetTypes_Units` FOREIGN KEY (`OffsetUnitsID`) REFERENCES `Units` (`UnitsID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `VariableNameCV`
+--
+
+CREATE TABLE VariableNameCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `DataTypeCV`
+--
+
+CREATE TABLE DataTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition TEXT NULL,
+  PRIMARY KEY (`Term` ASC)
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Variables`
+--
+
+CREATE TABLE Variables (
+  VariableID INT NOT NULL  AUTO_INCREMENT,
+  VariableCode VARCHAR(50) NOT NULL,
+  VariableName VARCHAR(255) NOT NULL,
+  Speciation VARCHAR(255) NOT NULL DEFAULT 'Not Applicable',
+  VariableUnitsID INT NOT NULL,
+  SampleMedium VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  ValueType VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  IsRegular BOOL NOT NULL DEFAULT 0,
+  TimeSupport DOUBLE NOT NULL DEFAULT 0,
+  TimeUnitsID INT NOT NULL DEFAULT 0,
+  DataType VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  GeneralCategory VARCHAR(255) NOT NULL DEFAULT 'Unknown',
+  NoDataValue DOUBLE NOT NULL DEFAULT 0,
+  UNIQUE KEY `AK_Variables_VariableCode` (`VariableCode`(50) ASC),
+  PRIMARY KEY (`VariableID` ASC),
+  CONSTRAINT `FK_Variables_Units` FOREIGN KEY (`VariableUnitsID`) REFERENCES `Units` (`UnitsID`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `FK_Variables_Units1` FOREIGN KEY (`TimeUnitsID`) REFERENCES `Units` (`UnitsID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_DataTypeCV` FOREIGN KEY (`DataType`) REFERENCES `DataTypeCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_GeneralCategoryCV` FOREIGN KEY (`GeneralCategory`) REFERENCES `GeneralCategoryCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_SampleMediumCV` FOREIGN KEY (`SampleMedium`) REFERENCES `SampleMediumCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_ValueTypeCV` FOREIGN KEY (`ValueType`) REFERENCES `ValueTypeCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_VariableNameCV` FOREIGN KEY (`VariableName`) REFERENCES `VariableNameCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Variables_SpeciationCV` FOREIGN KEY (`Speciation`) REFERENCES `SpeciationCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Sites`
+--
+
+CREATE TABLE Sites (
+  SiteID INT NOT NULL  AUTO_INCREMENT,
+  SiteCode VARCHAR(50) NOT NULL,
+  SiteName VARCHAR(255) NOT NULL,
+  Latitude DOUBLE NOT NULL,
+  Longitude DOUBLE NOT NULL,
+  LatLongDatumID INT NOT NULL DEFAULT 0,
+  Elevation_m DOUBLE NULL DEFAULT NULL,
+  VerticalDatum VARCHAR(255) NULL DEFAULT NULL,
+  LocalX DOUBLE NULL DEFAULT NULL,
+  LocalY DOUBLE NULL DEFAULT NULL,
+  LocalProjectionID INT NULL DEFAULT NULL,
+  PosAccuracy_m DOUBLE NULL DEFAULT NULL,
+  State VARCHAR(255) NULL DEFAULT NULL,
+  County VARCHAR(255) NULL DEFAULT NULL,
+  Comments TEXT NULL,
+  UNIQUE KEY `AK_Sites_SiteCode` (`SiteCode`(50) ASC),
+  PRIMARY KEY (`SiteID` ASC),
+  CONSTRAINT `FK_Sites_VerticalDatumCV` FOREIGN KEY (`VerticalDatum`) REFERENCES `VerticalDatumCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Sites_SpatialReferences` FOREIGN KEY (`LatLongDatumID`) REFERENCES `SpatialReferences` (`SpatialReferenceID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Sites_SpatialReferences1` FOREIGN KEY (`LocalProjectionID`) REFERENCES `SpatialReferences` (`SpatialReferenceID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `DataValues`
+--
+
+CREATE TABLE DataValues (
+  ValueID INT NOT NULL  AUTO_INCREMENT,
+  DataValue DOUBLE NOT NULL,
+  ValueAccuracy DOUBLE NULL DEFAULT NULL,
+  LocalDateTime DATETIME NOT NULL,
+  UTCOffset DOUBLE NOT NULL,
+  DateTimeUTC DATETIME NOT NULL,
+  SiteID INT NOT NULL,
+  VariableID INT NOT NULL,
+  OffsetValue DOUBLE NULL DEFAULT NULL,
+  OffsetTypeID INT NULL DEFAULT NULL,
+  CensorCode VARCHAR(50) NOT NULL DEFAULT 'nc',
+  QualifierID INT NULL DEFAULT NULL,
+  MethodID INT NOT NULL DEFAULT 0,
+  SourceID INT NOT NULL,
+  SampleID INT NULL DEFAULT NULL,
+  DerivedFromID INT NULL DEFAULT NULL,
+  QualityControlLevelID INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`ValueID` ASC),
+  UNIQUE KEY `DataValues_UNIQUE_DataValues` (`DataValue` ASC,`ValueAccuracy` ASC,`LocalDateTime` ASC,`UTCOffset` ASC,`DateTimeUTC` ASC,`SiteID` ASC,`VariableID` ASC,`OffsetValue` ASC,`OffsetTypeID` ASC,`CensorCode`(50) ASC,`QualifierID` ASC,`MethodID` ASC,`SourceID` ASC,`SampleID` ASC,`DerivedFromID` ASC,`QualityControlLevelID` ASC),
+  CONSTRAINT `FK_DataValues_Sources` FOREIGN KEY (`SourceID`) REFERENCES `Sources` (`SourceID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_QualityControlLevels` FOREIGN KEY (`QualityControlLevelID`) REFERENCES `QualityControlLevels` (`QualityControlLevelID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_OffsetTypes` FOREIGN KEY (`OffsetTypeID`) REFERENCES `OffsetTypes` (`OffsetTypeID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_CensorCodeCV` FOREIGN KEY (`CensorCode`) REFERENCES `CensorCodeCV` (`Term`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_Variables` FOREIGN KEY (`VariableID`) REFERENCES `Variables` (`VariableID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_Methods` FOREIGN KEY (`MethodID`) REFERENCES `Methods` (`MethodID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_Qualifiers` FOREIGN KEY (`QualifierID`) REFERENCES `Qualifiers` (`QualifierID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_Samples` FOREIGN KEY (`SampleID`) REFERENCES `Samples` (`SampleID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_DataValues_Sites` FOREIGN KEY (`SiteID`) REFERENCES `Sites` (`SiteID`) ON DELETE NO ACTION ON UPDATE CASCADE
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Categories`
+--
+
+CREATE TABLE Categories (
+  VariableID INT NOT NULL,
+  DataValue DOUBLE NOT NULL,
+  CategoryDescription TEXT NOT NULL,
+  CONSTRAINT `FK_Categories_Variables` FOREIGN KEY (`VariableID`) REFERENCES `Variables` (`VariableID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `Groups`
+--
+
+CREATE TABLE Groups (
+  GroupID INT NOT NULL,
+  ValueID INT NOT NULL,
+  CONSTRAINT `FK_Groups_GroupDescriptions` FOREIGN KEY (`GroupID`) REFERENCES `GroupDescriptions` (`GroupID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Groups_DataValues` FOREIGN KEY (`ValueID`) REFERENCES `DataValues` (`ValueID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;
+
+--
+-- Table structure for table `DerivedFrom`
+--
+
+CREATE TABLE DerivedFrom (
+  DerivedFromID INT NOT NULL,
+  ValueID INT NOT NULL,
+  CONSTRAINT `FK_DerivedFrom_DataValues` FOREIGN KEY (`ValueID`) REFERENCES `DataValues` (`ValueID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) DEFAULT CHARSET=utf8 ENGINE=InnoDB;

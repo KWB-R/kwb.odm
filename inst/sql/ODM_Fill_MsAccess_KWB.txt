@@ -1,0 +1,8 @@
+INSERT INTO `OffsetTypes` (`OffsetUnitsID`,`OffsetDescription`) 
+VALUES (137,'Dummy record intended to prevent NULL values in field OffsetTypeID of table DataValues');
+
+INSERT INTO `Qualifiers` (`QualifierCode`,`QualifierDescription`) 
+VALUES ('none','Dummy record intended to prevent NULL values in field QualifierID of table DataValues');
+
+INSERT INTO `Samples` (`SampleType`,`LabSampleCode`,`LabMethodID`) 
+VALUES ('Unknown','none', 0);

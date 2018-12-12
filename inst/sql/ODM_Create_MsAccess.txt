@@ -1,0 +1,466 @@
+-- SQL Script to Create ODM Blank Schema within a MySQL Database Called "ODM"
+-- Created by Jeff Horsburgh
+-- Created on: 3-3-2011
+ 
+-- Ensure that tables with existing primay key values of zero are created successfully
+#SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
+
+--
+   -- Table structure for table `GeneralCategoryCV`
+--
+
+CREATE TABLE GeneralCategoryCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `SampleMediumCV`
+--
+
+CREATE TABLE SampleMediumCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `CensorCodeCV`
+--
+
+CREATE TABLE CensorCodeCV (
+  Term VARCHAR(50) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `TopicCategoryCV`
+--
+
+CREATE TABLE TopicCategoryCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `SpeciationCV`
+--
+
+CREATE TABLE SpeciationCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `GroupDescriptions`
+--
+
+CREATE TABLE GroupDescriptions (
+  GroupID AUTOINCREMENT NOT NULL,
+  GroupDescription MEMO NULL,
+  PRIMARY KEY (GroupID)
+);
+
+--
+  -- Table structure for table `LabMethods`
+--
+
+CREATE TABLE LabMethods (
+  LabMethodID AUTOINCREMENT NOT NULL,
+  LabName VARCHAR(255) NOT NULL,
+  LabOrganization VARCHAR(255) NOT NULL,
+  LabMethodName VARCHAR(255) NOT NULL,
+  LabMethodDescription MEMO NOT NULL,
+  LabMethodLink MEMO NULL,
+  PRIMARY KEY (LabMethodID)
+# UNIQUE constraint added by HS
+  , constraint UN_LabMethods UNIQUE (LabMethodName)
+);
+
+--
+  -- Table structure for table `Methods`
+--
+
+CREATE TABLE Methods (
+  MethodID AUTOINCREMENT NOT NULL,
+  MethodDescription MEMO NOT NULL,
+  MethodLink MEMO NULL,
+  PRIMARY KEY (MethodID),
+
+# HS: we need a UNIQUE-constraint
+  CONSTRAINT unique_methods UNIQUE (MethodDescription)
+);
+
+--
+  -- Table structure for table `Units`
+--
+
+CREATE TABLE Units (
+  UnitsID AUTOINCREMENT NOT NULL,
+  UnitsName VARCHAR(255) NOT NULL,
+  UnitsType VARCHAR(255) NOT NULL,
+  UnitsAbbreviation VARCHAR(255) NOT NULL,
+  PRIMARY KEY (UnitsID)
+);
+
+--
+  -- Table structure for table `Qualifiers`
+--
+
+CREATE TABLE Qualifiers (
+  QualifierID AUTOINCREMENT NOT NULL,
+  QualifierCode VARCHAR(50) NULL,
+  QualifierDescription MEMO NOT NULL,
+  PRIMARY KEY (QualifierID)
+);
+
+--
+  -- Table structure for table `QualityControlLevels`
+--
+
+CREATE TABLE QualityControlLevels (
+  QualityControlLevelID AUTOINCREMENT NOT NULL,
+  QualityControlLevelCode VARCHAR(50) NOT NULL,
+  Definition VARCHAR(255) NOT NULL,
+  Explanation MEMO NOT NULL,
+  PRIMARY KEY (QualityControlLevelID)
+);
+
+--
+  -- Table structure for table `ODMVersion`
+--
+
+CREATE TABLE ODMVersion (
+  VersionNumber VARCHAR(50) NOT NULL
+);
+
+--
+  -- Table structure for table `SampleTypeCV`
+--
+
+CREATE TABLE SampleTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `Samples`
+--
+
+CREATE TABLE Samples (
+  SampleID AUTOINCREMENT NOT NULL,
+  SampleType VARCHAR(255) NOT NULL,
+  LabSampleCode VARCHAR(50) NOT NULL,
+  LabMethodID INT NOT NULL,
+  PRIMARY KEY (SampleID),
+  CONSTRAINT FK_Samples_LabMethods FOREIGN KEY (LabMethodID) REFERENCES LabMethods (LabMethodID),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT FK_Samples_SampleTypeCV FOREIGN KEY (SampleType) REFERENCES SampleTypeCV (Term) 
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `SpatialReferences`
+--
+
+CREATE TABLE SpatialReferences (
+  SpatialReferenceID AUTOINCREMENT NOT NULL,
+  SRSID INT NULL,
+  SRSName VARCHAR(255) NOT NULL,
+  IsGeographic YESNO NULL,
+  Notes MEMO NULL,
+  PRIMARY KEY (SpatialReferenceID)
+);
+
+--
+  -- Table structure for table `ValueTypeCV`
+--
+
+CREATE TABLE ValueTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `ISOMetadata`
+--
+
+CREATE TABLE ISOMetadata (
+  MetadataID AUTOINCREMENT NOT NULL,
+  TopicCategory VARCHAR(255) NOT NULL,
+  Title VARCHAR(255) NOT NULL,
+  Abstract MEMO NOT NULL,
+  ProfileVersion VARCHAR(255) NOT NULL,
+  MetadataLink MEMO NULL,
+  PRIMARY KEY (MetadataID),
+  CONSTRAINT `FK_ISOMetadata_TopicCategoryCV` FOREIGN KEY (`TopicCategory`) REFERENCES `TopicCategoryCV` (`Term`) 
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `VerticalDatumCV`
+--
+
+CREATE TABLE VerticalDatumCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `SeriesCatalog`
+--
+
+CREATE TABLE SeriesCatalog (
+  SeriesID AUTOINCREMENT NOT NULL,
+  SiteID INT NULL,
+  SiteCode VARCHAR(50) NULL,
+  SiteName VARCHAR(255) NULL,
+  VariableID INT NULL,
+  VariableCode VARCHAR(50) NULL,
+  VariableName VARCHAR(255) NULL,
+  Speciation VARCHAR(255) NULL,
+  VariableUnitsID INT NULL,
+  VariableUnitsName VARCHAR(255) NULL,
+  SampleMedium VARCHAR(255) NULL,
+  ValueType VARCHAR(255) NULL,
+  TimeSupport DOUBLE NULL,
+  TimeUnitsID INT NULL,
+  TimeUnitsName VARCHAR(255) NULL,
+  DataType VARCHAR(255) NULL,
+  GeneralCategory VARCHAR(255) NULL,
+  MethodID INT NULL,
+  MethodDescription MEMO NULL,
+  SourceID INT NULL,
+  Organization VARCHAR(255) NULL,
+  SourceDescription MEMO NULL,
+  Citation MEMO NULL,
+  QualityControlLevelID INT NULL,
+  QualityControlLevelCode VARCHAR(50) NULL,
+  BeginDateTime DATETIME NULL,
+  EndDateTime DATETIME NULL,
+  BeginDateTimeUTC DATETIME NULL,
+  EndDateTimeUTC DATETIME NULL,
+  ValueCount INT NULL,
+  PRIMARY KEY (SeriesID)
+);
+
+--
+  -- Table structure for table `Sources`
+--
+
+CREATE TABLE Sources (
+  SourceID AUTOINCREMENT NOT NULL,
+  Organization VARCHAR(255) NOT NULL,
+  SourceDescription MEMO NOT NULL,
+  SourceLink MEMO NULL,
+  ContactName VARCHAR(255) NOT NULL,
+  Phone VARCHAR(255) NOT NULL,
+  Email VARCHAR(255) NOT NULL,
+  Address VARCHAR(255) NOT NULL,
+  City VARCHAR(255) NOT NULL,
+  State VARCHAR(255) NOT NULL,
+  ZipCode VARCHAR(255) NOT NULL,
+  Citation MEMO NOT NULL,
+  MetadataID INT NOT NULL,
+  PRIMARY KEY (SourceID),
+  CONSTRAINT `FK_Sources_ISOMetaData` FOREIGN KEY (`MetadataID`) REFERENCES `ISOMetadata` (`MetadataID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+
+# HS: we need a UNIQUE-constraint
+  CONSTRAINT `AK_Sources_Unique` UNIQUE (Organization, SourceDescription)
+);
+
+--
+  -- Table structure for table `OffsetTypes`
+--
+
+CREATE TABLE OffsetTypes (
+  OffsetTypeID AUTOINCREMENT NOT NULL,
+  OffsetUnitsID INT NOT NULL,
+  OffsetDescription MEMO NOT NULL,
+  PRIMARY KEY (OffsetTypeID),
+  CONSTRAINT `FK_OffsetTypes_Units` FOREIGN KEY (`OffsetUnitsID`) REFERENCES `Units` (`UnitsID`) 
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `VariableNameCV`
+--
+
+CREATE TABLE VariableNameCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `DataTypeCV`
+--
+
+CREATE TABLE DataTypeCV (
+  Term VARCHAR(255) NOT NULL,
+  Definition MEMO NULL,
+  PRIMARY KEY (Term)
+);
+
+--
+  -- Table structure for table `Variables`
+--
+
+CREATE TABLE Variables (
+  VariableID AUTOINCREMENT NOT NULL,
+  VariableCode VARCHAR(50) NOT NULL,
+  VariableName VARCHAR(255) NOT NULL,
+  Speciation VARCHAR(255) NOT NULL,
+  VariableUnitsID INT NOT NULL,
+  SampleMedium VARCHAR(255) NOT NULL,
+  ValueType VARCHAR(255) NOT NULL,
+  IsRegular YESNO NOT NULL,
+  TimeSupport DOUBLE NOT NULL,
+  TimeUnitsID INT NOT NULL,
+  DataType VARCHAR(255) NOT NULL,
+  GeneralCategory VARCHAR(255) NOT NULL,
+  NoDataValue DOUBLE NOT NULL,
+  CONSTRAINT `AK_Variables_VariableCode` UNIQUE (`VariableCode`),
+  PRIMARY KEY (VariableID),
+   CONSTRAINT `FK_Variables_Units` FOREIGN KEY (`VariableUnitsID`) REFERENCES `Units` (`UnitsID`),
+#ON DELETE NO ACTION ON UPDATE CASCADE,
+   CONSTRAINT `FK_Variables_Units1` FOREIGN KEY (`TimeUnitsID`) REFERENCES `Units` (`UnitsID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_DataTypeCV` FOREIGN KEY (`DataType`) REFERENCES `DataTypeCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_GeneralCategoryCV` FOREIGN KEY (`GeneralCategory`) REFERENCES `GeneralCategoryCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_SampleMediumCV` FOREIGN KEY (`SampleMedium`) REFERENCES `SampleMediumCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_ValueTypeCV` FOREIGN KEY (`ValueType`) REFERENCES `ValueTypeCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_VariableNameCV` FOREIGN KEY (`VariableName`) REFERENCES `VariableNameCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Variables_SpeciationCV` FOREIGN KEY (`Speciation`) REFERENCES `SpeciationCV` (`Term`)
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `Sites`
+--
+
+CREATE TABLE Sites (
+  SiteID AUTOINCREMENT NOT NULL,
+  SiteCode VARCHAR(50) NOT NULL,
+  SiteName VARCHAR(255) NOT NULL,
+  Latitude DOUBLE NOT NULL,
+  Longitude DOUBLE NOT NULL,
+  LatLongDatumID INT NOT NULL,
+  Elevation_m DOUBLE NULL,
+  VerticalDatum VARCHAR(255) NULL,
+  LocalX DOUBLE NULL,
+  LocalY DOUBLE NULL,
+  LocalProjectionID INT NULL,
+  PosAccuracy_m DOUBLE NULL,
+  State VARCHAR(255) NULL,
+  County VARCHAR(255) NULL,
+  Comments MEMO NULL,
+#  UNIQUE KEY `AK_Sites_SiteCode` (`SiteCode`(50) ASC),
+  CONSTRAINT `AK_Sites_SiteCode` UNIQUE (`SiteCode`),
+  PRIMARY KEY (SiteID),
+  CONSTRAINT `FK_Sites_VerticalDatumCV` FOREIGN KEY (`VerticalDatum`) REFERENCES `VerticalDatumCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Sites_SpatialReferences` FOREIGN KEY (`LatLongDatumID`) REFERENCES `SpatialReferences` (`SpatialReferenceID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_Sites_SpatialReferences1` FOREIGN KEY (`LocalProjectionID`) REFERENCES `SpatialReferences` (`SpatialReferenceID`)
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `DataValues`
+--
+
+CREATE TABLE DataValues (
+  ValueID AUTOINCREMENT NOT NULL,
+  DataValue DOUBLE NOT NULL,
+  ValueAccuracy DOUBLE NULL,
+  LocalDateTime DATETIME NOT NULL,
+  UTCOffset DOUBLE NOT NULL,
+  DateTimeUTC DATETIME NOT NULL,
+  SiteID INT NOT NULL,
+  VariableID INT NOT NULL,
+  OffsetValue DOUBLE NULL,
+  OffsetTypeID INT NULL,
+  CensorCode VARCHAR(50) NOT NULL,
+  QualifierID INT NULL,
+  MethodID INT NOT NULL,
+  SourceID INT NOT NULL,
+  SampleID INT NULL,
+  DerivedFromID INT NULL,
+  QualityControlLevelID INT NOT NULL,
+  PRIMARY KEY (ValueID),
+
+# UNIQUE constraint reduced to 10 fields!
+
+# CONSTRAINT `DataValues_UNIQUE_DataValues` UNIQUE (`DataValue`,`ValueAccuracy`,`LocalDateTime`,`UTCOffset`,`DateTimeUTC`,`SiteID`,`VariableID`,`OffsetValue`,`OffsetTypeID`,`CensorCode`,`QualifierID`,`MethodID`,`SourceID`,`SampleID`,`DerivedFromID`,`QualityControlLevelID`),
+
+  CONSTRAINT `DataValues_UNIQUE_DataValues` UNIQUE (`DateTimeUTC`,`SiteID`,`VariableID`,`OffsetValue`,`OffsetTypeID`,`QualifierID`,`MethodID`,`SampleID`,`DerivedFromID`,`QualityControlLevelID`),
+
+   CONSTRAINT `FK_DataValues_Sources` FOREIGN KEY (`SourceID`) REFERENCES `Sources` (`SourceID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_QualityControlLevels` FOREIGN KEY (`QualityControlLevelID`) REFERENCES `QualityControlLevels` (`QualityControlLevelID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_OffsetTypes` FOREIGN KEY (`OffsetTypeID`) REFERENCES `OffsetTypes` (`OffsetTypeID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_CensorCodeCV` FOREIGN KEY (`CensorCode`) REFERENCES `CensorCodeCV` (`Term`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_Variables` FOREIGN KEY (`VariableID`) REFERENCES `Variables` (`VariableID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_Methods` FOREIGN KEY (`MethodID`) REFERENCES `Methods` (`MethodID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_Qualifiers` FOREIGN KEY (`QualifierID`) REFERENCES `Qualifiers` (`QualifierID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_Samples` FOREIGN KEY (`SampleID`) REFERENCES `Samples` (`SampleID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_DataValues_Sites` FOREIGN KEY (`SiteID`) REFERENCES `Sites` (`SiteID`)
+#ON DELETE NO ACTION ON UPDATE CASCADE
+);
+
+--
+  -- Table structure for table `Categories`
+--
+
+CREATE TABLE Categories (
+  VariableID INT NOT NULL,
+  DataValue DOUBLE NOT NULL,
+  CategoryDescription MEMO NOT NULL,
+  CONSTRAINT `FK_Categories_Variables` FOREIGN KEY (`VariableID`) REFERENCES `Variables` (`VariableID`)
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `Groups`
+--
+
+CREATE TABLE Groups (
+  GroupID INT NOT NULL,
+  ValueID INT NOT NULL,
+  CONSTRAINT `FK_Groups_GroupDescriptions` FOREIGN KEY (`GroupID`) REFERENCES `GroupDescriptions` (`GroupID`),
+#ON DELETE NO ACTION ON UPDATE NO ACTION,
+   CONSTRAINT `FK_Groups_DataValues` FOREIGN KEY (`ValueID`) REFERENCES `DataValues` (`ValueID`)
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+--
+  -- Table structure for table `DerivedFrom`
+--
+
+CREATE TABLE DerivedFrom (
+  DerivedFromID INT NOT NULL,
+  ValueID INT NOT NULL,
+  CONSTRAINT `FK_DerivedFrom_DataValues` FOREIGN KEY (`ValueID`) REFERENCES `DataValues` (`ValueID`) 
+#ON DELETE NO ACTION ON UPDATE NO ACTION
+);

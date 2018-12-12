@@ -1,0 +1,30 @@
+#
+# This file contains SQL commands (in MS Access Syntax) that extend the
+# CUAHSI ODM database schema by additional tables that we need, e.g. to
+# group parameters.
+#
+# Use kwb.db::runSqlCommandsFromFile() to run the SQL commands in this script.
+# Separate SQL commands with semicolon and new line.
+#
+
+# definition of variable groups, e.g. to group variables being relevant within
+# a certain project
+CREATE TABLE VariableGroups (
+  VariableGroupID AUTOINCREMENT PRIMARY KEY,
+  VariableGroupName Varchar(255) NOT NULL,
+  VariableGroupDescription MEMO NULL,
+  CONSTRAINT UN_variableGroup UNIQUE (VariableGroupName)
+);
+
+
+# "bridge"-table between table "Variables"" and table "VariableGroups""
+CREATE TABLE VariableGroupVariable (
+  VariableGroupVariableID AUTOINCREMENT PRIMARY KEY,
+  VariableID LONG NOT NULL,
+  VariableGroupID LONG NOT NULL,
+  CONSTRAINT UN_variableGroupVariable UNIQUE (VariableID, VariableGroupID),
+  CONSTRAINT FK_variableGroupVariable1 FOREIGN KEY (VariableID) 
+    REFERENCES Variables (VariableID),
+  CONSTRAINT FK_variableGroupVariable2 FOREIGN KEY (VariableGroupID) 
+    REFERENCES VariableGroups (VariableGroupID)
+);
