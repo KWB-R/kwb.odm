@@ -1,6 +1,10 @@
 Package: kwb.odm
 Maintainer: Hauke Sonnenberg <hauke.sonnenberg@kompetenz-wasser.de>
 Imports: kwb.datetime, kwb.db, kwb.utils
+Remotes:  
+    github::kwb.datetime,
+    github::kwb.db,
+    github::kwb.utils,
 Author: Hauke Sonnenberg
 Version: 0.1.99
 License: GPL
