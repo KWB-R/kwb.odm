@@ -11,3 +11,5 @@ License: GPL
 Title: Interface to ODM database (see http://his.cuahsi.org/odmdatabases.html)
 Description: DEVELOPMENT VERSION!!! Functions enabling to retrieve and filter 
     data from an ODM database.
+URL: https://github.com/KWB-R/kwb.odm
+BugReports: https://github.com/KWB-R/kwb.odm/issues
