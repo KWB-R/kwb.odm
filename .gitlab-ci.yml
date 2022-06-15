@@ -1,0 +1,25 @@
+################################################################################
+### generated-with:
+###   type: R-package
+###   name: kwb.pkgbuild
+###   version: 0.2.2
+###   installed-from: Github (kwb-r/kwb.pkgbuild@99a5138e8eadff729bf46485a7970bc9e809ce41)
+###   installed-on: '2022-06-03'
+### generated-by:
+###   user: mrustl
+###   function-call: kwb.pkgbuild::create_empty_branch_ghpages(repo = "kwb.odm")
+### generated-on: 2022-06-15 09:15:12
+################################################################################
+
+
+pages:
+  stage: deploy
+  script:
+  - mkdir .public
+  - cp -r * .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+  only:
+  - gh-pages
