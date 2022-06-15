@@ -1,15 +1,26 @@
 Package: kwb.odm
-Maintainer: Hauke Sonnenberg <hauke.sonnenberg@kompetenz-wasser.de>
-Imports: kwb.datetime, kwb.db, kwb.utils
-Remotes:  
-    github::kwb-r/kwb.datetime,
-    github::kwb-r/kwb.db,
-    github::kwb-r/kwb.utils,
-Author: Hauke Sonnenberg
-Version: 0.1.99
-License: GPL
-Title: Interface to ODM database (see http://his.cuahsi.org/odmdatabases.html)
-Description: DEVELOPMENT VERSION!!! Functions enabling to retrieve and filter 
-    data from an ODM database.
+Title: Interface to ODM database (see
+    http://his.cuahsi.org/odmdatabases.html)
+Version: 0.2.0
+Authors@R: c(
+    person("Hauke", "Sonnenberg", , "hauke.sonnenberg@kompetenz-wasser.de", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-9134-2871")),
+    person("Michael", "Rustler", , "michael.rustler@kompetenz-wasser.de", role = "ctb",
+           comment = c(ORCID = "0000-0003-0647-7726")),
+    person("FAKIN", role = "fnd"),
+    person("Kompetenzzentrum Wasser Berlin gGmbH", role = "cph")
+  )
+Description: Functions enabling to retrieve and filter data from an ODM
+    database.
+License: MIT + file LICENSE
 URL: https://github.com/KWB-R/kwb.odm
 BugReports: https://github.com/KWB-R/kwb.odm/issues
+Imports: 
+    kwb.datetime,
+    kwb.db,
+    kwb.utils
+Remotes: 
+    github::kwb-r/kwb.datetime,
+    github::kwb-r/kwb.db,
+    github::kwb-r/kwb.utils
+Encoding: UTF-8
